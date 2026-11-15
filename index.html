@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حملة مليون استغفار - صدقة جارية للأستاذة هناء طه إسماعيل</title>
-    
-    <!-- استيراد Tailwind CSS للتصميم المتجاوب -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- استيراد الخطوط العربية (Tajawal و Amiri) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
-    <!-- مكتبات Firebase للمزامنة السحابية الجماعية المباشرة -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -24,13 +18,6 @@
                     fontFamily: {
                         sans: ['Tajawal', 'sans-serif'],
                         serif: ['Amiri', 'serif'],
-                    },
-                    colors: {
-                        emerald: {
-                            850: '#064e3b',
-                            900: '#043927',
-                            950: '#022c22',
-                        }
                     }
                 }
             }
@@ -38,644 +25,384 @@
     </script>
 
     <style>
-        /* خلفية إسلامية هادئة بنقش هندسي خفيف */
         body {
             background-color: #fdfbf7;
-            background-image: radial-gradient(#065f46 0.65px, transparent 0.65px), radial-gradient(#d97706 0.65px, #fdfbf7 0.65px);
+            background-image: radial-gradient(#065f46 0.6px, transparent 0.6px), radial-gradient(#d97706 0.6px, #fdfbf7 0.6px);
             background-size: 32px 32px;
             background-position: 0 0, 16px 16px;
         }
-        
-        /* تأثير نبض ذهبي حول المسبحة الإلكترونية */
         @keyframes pulse-ring {
-            0% { transform: scale(0.95); opacity: 0.75; }
-            70% { transform: scale(1.1); opacity: 0; }
-            100% { transform: scale(1.1); opacity: 0; }
+            0% { transform: scale(0.95); opacity: 0.7; }
+            70% { transform: scale(1.08); opacity: 0; }
+            100% { transform: scale(1.08); opacity: 0; }
         }
         .tasbih-pulse::before {
             content: '';
             position: absolute;
             inset: -8px;
             border-radius: 9999px;
-            border: 3px solid #f59e0b;
+            border: 3px solid #d97706;
             animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
         }
-
-        /* تخصيص شريط التمرير */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #059669;
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #059669; border-radius: 4px; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- إشعار عائم (Toast Notification) بدلاً من alert -->
-    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none -translate-y-2 w-11/12 max-w-md">
-        <div class="bg-emerald-950/95 backdrop-blur text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-amber-400/60 flex items-center justify-center gap-3 text-sm md:text-base font-bold text-center">
-            <span id="toast-icon" class="text-xl">✨</span>
+    <!-- إشعار عائم -->
+    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none">
+        <div id="toast-content" class="bg-emerald-900 text-white px-6 py-3 rounded-2xl shadow-xl border border-amber-400/50 flex items-center gap-3 text-sm md:text-base font-medium">
+            <span id="toast-icon">✨</span>
             <span id="toast-message">تمت الإضافة بنجاح</span>
         </div>
     </div>
 
-    <!-- الترويسة الرئيسية (Header) -->
+    <!-- الترويسة -->
     <header class="bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-850 text-white shadow-xl border-b-4 border-amber-500 relative overflow-hidden">
-        <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
-
         <div class="max-w-5xl mx-auto px-4 py-8 md:py-12 text-center relative z-10">
-            <div class="inline-flex items-center gap-2 bg-emerald-800/80 border border-amber-400/40 px-4 py-1.5 rounded-full text-amber-300 text-xs md:text-sm font-bold mb-3 shadow-sm">
+            <div class="inline-flex items-center gap-2 bg-emerald-800/80 border border-amber-400/40 px-4 py-1.5 rounded-full text-amber-300 text-xs md:text-sm font-medium mb-4">
                 <span>🌿</span>
                 <span>صدقة جارية ووفاءٌ لأهل العلم</span>
                 <span>🌿</span>
             </div>
 
-            <!-- مؤشر حالة الاتصال الجماعي المباشر -->
+            <!-- مؤشر جاهزية البرنامج -->
             <div class="mb-4 flex justify-center">
-                <div id="connection-status" class="inline-flex items-center gap-2 bg-emerald-950/85 border border-emerald-600/50 px-4 py-1.5 rounded-full text-xs text-emerald-200 shadow-inner">
-                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span id="status-text">جاري الاتصال بالعداد الجماعي المباشر...</span>
+                <div class="inline-flex items-center gap-2 bg-emerald-950/80 border border-emerald-600/50 px-3.5 py-1 rounded-full text-xs text-emerald-200">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span>جاهز وفائق السرعة ✓</span>
                 </div>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-3 leading-tight">
+            <h1 class="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
                 حملة مليون استغفار
             </h1>
             
             <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-amber-300 mb-5">
-                على روح المرحومة الأستاذة <span class="underline decoration-amber-500/70 underline-offset-8">هناء طه إسماعيل</span>
-                <span class="block sm:inline text-sm sm:text-base font-medium text-emerald-200 mt-1 sm:mt-0">(مدرسة مادة الحاسوب)</span>
+                على روح المرحومة الأستاذة <span class="underline decoration-amber-500/60 underline-offset-8">هناء طه إسماعيل</span>
+                <span class="block sm:inline text-sm sm:text-base font-normal text-emerald-200 mt-1 sm:mt-0">(مدرسة مادة الحاسوب)</span>
             </h2>
 
             <div class="max-w-2xl mx-auto bg-emerald-950/60 backdrop-blur-sm border border-emerald-700/60 rounded-2xl p-4 md:p-5 shadow-inner">
                 <p class="font-serif text-lg md:text-xl text-emerald-50 leading-relaxed">
-                    "اللهم اغفر لها وارحمها، وعافها واعف عنها، وأكرم نزلها، ووسع مدخلها، واجعل ما علّمته لطلبتها نوراً ورفعةً لها في عليين، واجعل هذا الاستغفار شفيعاً لها يوم الدين."
+                    "اللهم اغفر لها وارحمها، وعافها واعف عنها، واجعل ما علّمته لطلبتها نوراً ورفعةً لها في عليين."
                 </p>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- المحتوى -->
     <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 md:py-10 space-y-8">
 
-        <!-- بطاقة التهنئة والشكر التلقائية عند وصول المتبقي إلى 0 -->
+        <!-- بطاقة الإتمام -->
         <section id="completion-banner" class="hidden transform transition-all duration-500">
-            <div class="bg-gradient-to-br from-amber-50 via-white to-amber-100 border-2 border-amber-500 rounded-3xl p-6 md:p-10 text-center shadow-2xl relative overflow-hidden">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full text-amber-600 mb-4 border-2 border-amber-300 shadow-sm">
-                    <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <span class="block text-sm font-extrabold text-amber-700 tracking-wide mb-2">🎉 اكتملت الختمة بحمد الله وتوفيقه 🎉</span>
-                <h3 class="text-2xl md:text-4xl font-black text-emerald-950 mb-4 leading-snug">
+            <div class="bg-gradient-to-br from-amber-50 via-white to-amber-100 border-2 border-amber-500 rounded-3xl p-6 md:p-10 text-center shadow-2xl">
+                <span class="block text-sm font-bold text-amber-700 tracking-wider uppercase mb-2">🎉 اكتملت الختمة بحمد الله وتوفيقه 🎉</span>
+                <h3 class="text-2xl md:text-4xl font-extrabold text-emerald-950 mb-4">
                     شكراً لكم وأجركم الله
                 </h3>
                 <p class="font-serif text-xl md:text-2xl text-slate-800 max-w-2xl mx-auto leading-relaxed mb-6">
-                    "شكراً لكم وأجركم الله، لقد تم إتمام المليون استغفار بحمد الله وتوفيقه على روح المرحومة الأستاذة <strong class="text-emerald-900">هناء طه إسماعيل</strong>، تقبل الله طاعتكم وجعلها في ميزان حسناتكم وحسناتها."
+                    "شكراً لكم وأجركم الله، لقد تم إتمام المليون استغفار بحمد الله وتوفيقه على روح المرحومة الأستاذة <strong class="text-emerald-900">هناء طه إسماعيل</strong>، تقبل الله طاعتكم."
                 </p>
-                <div class="flex flex-wrap justify-center gap-3">
-                    <button type="button" onclick="shareCampaign()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 font-extrabold px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
-                        <span>📤</span>
-                        <span>مشاركة بشارة الإتمام</span>
-                    </button>
-                </div>
             </div>
         </section>
 
-        <!-- لوحة الإحصائيات المباشرة وشريط التقدم -->
-        <section aria-label="إحصائيات الحملة" class="bg-white/95 backdrop-blur rounded-3xl shadow-lg border border-emerald-100 p-6 md:p-8">
+        <!-- الإحصائيات -->
+        <section class="bg-white/95 backdrop-blur rounded-3xl shadow-lg border border-emerald-100 p-6 md:p-8">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6">
-                <!-- الهدف الكلي -->
-                <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-5 text-center transition hover:shadow-md">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 text-center">
                     <span class="text-xs md:text-sm font-bold text-slate-500 block mb-1">الهدف الكلي للحملة</span>
-                    <span class="text-2xl md:text-3xl font-black text-slate-800 font-mono">1,000,000</span>
+                    <span class="text-2xl md:text-3xl font-extrabold text-slate-800 font-mono">1,000,000</span>
                     <span class="text-xs text-slate-400 block mt-1">استغفار</span>
                 </div>
 
-                <!-- ما تم إنجازه جماعياً -->
-                <div class="bg-emerald-50/90 border border-emerald-200 rounded-2xl p-5 text-center transition hover:shadow-md">
-                    <span class="text-xs md:text-sm font-bold text-emerald-800 block mb-1">ما تم إنجازه جماعياً</span>
-                    <span id="stat-completed" class="text-2xl md:text-3xl font-black text-emerald-800 font-mono">0</span>
-                    <span class="text-xs text-emerald-600 block mt-1">متزامن للجميع مباشرة</span>
+                <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-5 text-center">
+                    <span class="text-xs md:text-sm font-bold text-emerald-700 block mb-1">ما تم إنجازه</span>
+                    <span id="stat-completed" class="text-2xl md:text-3xl font-extrabold text-emerald-800 font-mono">0</span>
+                    <span class="text-xs text-emerald-600 block mt-1">في ميزان حسناتها بإذن الله</span>
                 </div>
 
-                <!-- المتبقي لإتمام المليون -->
-                <div class="bg-amber-50/95 border-2 border-amber-300 rounded-2xl p-5 text-center transition hover:shadow-md">
+                <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 text-center">
                     <span class="text-xs md:text-sm font-bold text-amber-800 block mb-1">المتبقي لإتمام المليون</span>
-                    <span id="stat-remaining" class="text-2xl md:text-3xl font-black text-amber-700 font-mono">1,000,000</span>
-                    <span id="stat-remaining-sub" class="text-xs text-amber-700/80 block mt-1">حتى نصل إلى 0 بإذن الله</span>
+                    <span id="stat-remaining" class="text-2xl md:text-3xl font-extrabold text-amber-700 font-mono">1,000,000</span>
+                    <span class="text-xs text-amber-700/80 block mt-1">حتى نصل إلى 0</span>
                 </div>
             </div>
 
-            <!-- شريط التقدم المتدرج -->
+            <!-- شريط التقدم -->
             <div class="space-y-2">
                 <div class="flex justify-between items-center text-sm font-bold">
-                    <span class="text-emerald-950">نسبة الإنجاز الكلية</span>
-                    <span id="progress-percentage" class="text-amber-800 bg-amber-100 border border-amber-200 px-3 py-0.5 rounded-full font-mono font-extrabold">0%</span>
+                    <span class="text-emerald-900">نسبة الإنجاز الكلية</span>
+                    <span id="progress-percentage" class="text-amber-700 bg-amber-100 px-3 py-0.5 rounded-full font-mono">0%</span>
                 </div>
                 <div class="w-full h-5 bg-slate-100 rounded-full overflow-hidden p-1 border border-slate-200 shadow-inner">
-                    <div id="progress-bar" class="h-full bg-gradient-to-l from-amber-500 via-emerald-600 to-emerald-900 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                    <div id="progress-bar" class="h-full bg-gradient-to-l from-amber-500 via-emerald-600 to-emerald-800 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
                 </div>
             </div>
         </section>
 
-        <!-- قسم التفاعل: نموذج التسجيل + المسبحة الإلكترونية -->
+        <!-- نموذج الإدخال والمسبحة -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-            
-            <!-- نموذج تسجيل المشاركة الجماعية -->
             <section class="lg:col-span-7 bg-white rounded-3xl shadow-lg border border-emerald-100 p-6 md:p-8 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
-                        <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl shrink-0">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xl">
                             ✍️
                         </div>
                         <div>
-                            <h3 class="text-xl font-extrabold text-emerald-950">سجّل مشاركتك الجماعية</h3>
-                            <p class="text-xs md:text-sm text-slate-500">تُضاف مشاركتك للعداد العام وتظهر فوراً أمام جميع الزوار</p>
+                            <h3 class="text-xl font-bold text-emerald-950">سجّل مشاركتك في الحملة</h3>
+                            <p class="text-xs md:text-sm text-slate-500">اكتب اسمك وعدد الاستغفار ليُحسب فوراً</p>
                         </div>
                     </div>
 
                     <form id="istighfar-form" class="space-y-5">
-                        <!-- حقل الاسم -->
                         <div>
                             <div class="flex justify-between items-center mb-1.5">
                                 <label for="participant-name" class="block text-sm font-bold text-slate-700">اسم المشارك / المشارِكة</label>
-                                <button type="button" onclick="setAnonymousName()" class="text-xs text-emerald-700 hover:text-emerald-950 underline font-bold cursor-pointer py-1 px-2 rounded-lg hover:bg-emerald-50 transition">
+                                <button type="button" onclick="setAnonymousName()" class="text-xs text-emerald-700 hover:text-emerald-900 underline font-medium cursor-pointer">
                                     المشاركة كـ "فاعل خير"
                                 </button>
                             </div>
-                            <input type="text" id="participant-name" placeholder="اكتب اسمك هنا (أو اتركه فارغاً ليكتب فاعل خير)" 
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition text-slate-800 bg-slate-50/60">
+                            <input type="text" id="participant-name" placeholder="اكتب اسمك هنا" 
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-slate-800 bg-slate-50/50">
                         </div>
 
-                        <!-- حقل العدد وأزرار الإضافة السريعة -->
                         <div>
                             <label for="istighfar-count" class="block text-sm font-bold text-slate-700 mb-1.5">عدد مرات الاستغفار</label>
                             <input type="number" id="istighfar-count" min="1" max="1000000" required placeholder="مثال: 100 أو 1000" 
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition text-slate-800 font-mono text-lg bg-slate-50/60">
+                                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-slate-800 font-mono text-lg bg-slate-50/50">
                             
                             <div class="mt-3">
-                                <span class="text-xs font-bold text-slate-500 block mb-2">إضافة سريعة للعدد:</span>
+                                <span class="text-xs text-slate-500 block mb-2">إضافة سريعة:</span>
                                 <div class="flex flex-wrap gap-2">
-                                    <button type="button" onclick="addQuickAmount(100)" class="px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold text-sm transition cursor-pointer active:scale-95">+ 100</button>
-                                    <button type="button" onclick="addQuickAmount(300)" class="px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold text-sm transition cursor-pointer active:scale-95">+ 300</button>
-                                    <button type="button" onclick="addQuickAmount(500)" class="px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold text-sm transition cursor-pointer active:scale-95">+ 500</button>
-                                    <button type="button" onclick="addQuickAmount(1000)" class="px-3.5 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-sm transition cursor-pointer active:scale-95">+ 1,000</button>
-                                    <button type="button" onclick="addQuickAmount(5000)" class="px-3.5 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-sm transition cursor-pointer active:scale-95">+ 5,000</button>
+                                    <button type="button" onclick="addQuickAmount(100)" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-sm cursor-pointer">+ 100</button>
+                                    <button type="button" onclick="addQuickAmount(500)" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-sm cursor-pointer">+ 500</button>
+                                    <button type="button" onclick="addQuickAmount(1000)" class="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold text-sm cursor-pointer">+ 1,000</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- زر التسجيل -->
-                        <button type="submit" id="submit-btn" class="w-full bg-gradient-to-l from-emerald-800 to-emerald-950 hover:from-emerald-700 hover:to-emerald-900 disabled:opacity-60 disabled:cursor-not-allowed text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-[0.99] flex items-center justify-center gap-2 text-lg cursor-pointer">
+                        <button type="submit" id="submit-btn" class="w-full bg-gradient-to-l from-emerald-800 to-emerald-950 hover:from-emerald-700 hover:to-emerald-900 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-lg cursor-pointer">
                             <span>📿</span>
-                            <span id="submit-btn-text">إضافة للحملة الجماعية</span>
+                            <span>إضافة للحملة</span>
                         </button>
                     </form>
                 </div>
-
-                <div class="mt-6 pt-4 border-t border-slate-100 text-center">
-                    <p class="font-serif text-base md:text-lg text-emerald-800">
-                        "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ"
-                    </p>
-                </div>
             </section>
 
-            <!-- المسبحة الإلكترونية التفاعلية -->
+            <!-- المسبحة -->
             <section class="lg:col-span-5 bg-gradient-to-b from-emerald-900 to-emerald-950 text-white rounded-3xl shadow-lg border border-emerald-800 p-6 md:p-8 flex flex-col items-center justify-between text-center">
                 <div class="w-full">
-                    <span class="inline-block bg-emerald-800/90 text-amber-300 text-xs font-bold px-3.5 py-1 rounded-full border border-amber-400/30 mb-2">
+                    <span class="inline-block bg-emerald-800/80 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-400/30 mb-2">
                         مسبحة فورية
                     </span>
-                    <h3 class="text-xl font-extrabold text-white">استغفر الآن وأضف لحصيلتك</h3>
-                    <p class="text-xs text-emerald-200 mt-1">اضغط على الدائرة للتسبيح ثم انقل العدد لخانة الإضافة</p>
+                    <h3 class="text-xl font-bold text-white">استغفر الآن</h3>
                 </div>
 
-                <!-- زر المسبحة الدائري -->
                 <div class="my-6 relative">
                     <button type="button" id="tasbih-btn" onclick="incrementTasbih()" 
-                        class="tasbih-pulse relative w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-400 text-emerald-950 shadow-2xl border-4 border-amber-200 flex flex-col items-center justify-center transition transform active:scale-95 select-none cursor-pointer focus:outline-none">
-                        <span class="text-xs font-extrabold tracking-wide text-emerald-950/80 mb-1">أستغفر الله</span>
+                        class="tasbih-pulse relative w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-400 text-emerald-950 shadow-2xl border-4 border-amber-200 flex flex-col items-center justify-center transition transform active:scale-95 cursor-pointer focus:outline-none">
+                        <span class="text-xs font-extrabold uppercase tracking-wide text-emerald-950/80 mb-1">أستغفر الله</span>
                         <span id="tasbih-counter" class="text-4xl sm:text-5xl font-black font-mono text-emerald-950">0</span>
-                        <span class="text-[11px] font-bold text-emerald-900 mt-1">اضغط للتسبيح</span>
+                        <span class="text-[11px] font-bold text-emerald-900 mt-1">اضغط هنا</span>
                     </button>
                 </div>
 
-                <!-- أزرار المسبحة الشخصية -->
                 <div class="w-full space-y-2.5">
                     <button type="button" onclick="transferTasbihToForm()" 
-                        class="w-full bg-white hover:bg-amber-50 text-emerald-950 font-extrabold py-3.5 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm cursor-pointer active:scale-98">
+                        class="w-full bg-white hover:bg-amber-50 text-emerald-950 font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm cursor-pointer">
                         <span>⬆️</span>
                         <span>نقل العدد إلى خانة الإضافة</span>
                     </button>
                     <button type="button" onclick="resetTasbih()" 
-                        class="w-full bg-emerald-800/60 hover:bg-emerald-800 text-emerald-200 text-xs font-medium py-2.5 px-4 rounded-xl transition cursor-pointer">
-                        تصفير عداد المسبحة الشخصية
+                        class="w-full bg-emerald-800/60 hover:bg-emerald-800 text-emerald-200 text-xs font-medium py-2 px-4 rounded-xl cursor-pointer">
+                        تصفير المسبحة
                     </button>
                 </div>
             </section>
         </div>
 
-        <!-- سجل المشاركين المباشر (بدون أي زر لتصفير العداد الرئيسي) -->
+        <!-- سجل المشاركين -->
         <section class="bg-white rounded-3xl shadow-lg border border-emerald-100 p-6 md:p-8">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
                 <div>
-                    <h3 class="text-xl font-extrabold text-emerald-950 flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-emerald-950 flex items-center gap-2">
                         <span>📋</span>
-                        <span>سجل المشاركين المباشر</span>
-                        <span id="participants-badge" class="bg-emerald-100 text-emerald-900 text-xs font-extrabold px-3 py-0.5 rounded-full font-mono">0</span>
+                        <span>سجل المشاركين</span>
+                        <span id="participants-badge" class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-0.5 rounded-full font-mono">0</span>
                     </h3>
-                    <p class="text-xs md:text-sm text-slate-500 mt-0.5">يتحدث الجدول لحظة بلحظة عند جميع المشاركين في الحملة</p>
                 </div>
 
-                <!-- أزرار النسخ والمشاركة -->
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" onclick="copyReportToClipboard()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer">
-                        <span>📄</span>
-                        <span>نسخ ملخص الحملة</span>
-                    </button>
-                    <button type="button" onclick="shareCampaign()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 font-extrabold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-                        <span>📲</span>
-                        <span>مشاركة الحملة</span>
-                    </button>
-                </div>
+                <button type="button" onclick="copyReportToClipboard()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer">
+                    <span>📄</span>
+                    <span>نسخ ملخص الحملة</span>
+                </button>
             </div>
 
-            <!-- جدول عرض المشاركين -->
             <div class="overflow-x-auto rounded-2xl border border-slate-200">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-emerald-950 text-white text-xs sm:text-sm">
-                            <th class="py-3.5 px-4 font-bold">#</th>
-                            <th class="py-3.5 px-4 font-bold">اسم المشارك</th>
-                            <th class="py-3.5 px-4 font-bold">عدد الاستغفار</th>
-                            <th class="py-3.5 px-4 font-bold">المتبقي بعد الإضافة</th>
-                            <th class="py-3.5 px-4 font-bold">وقت المشاركة</th>
+                        <tr class="bg-emerald-900 text-white text-xs sm:text-sm">
+                            <th class="p-3.5 sm:p-4 font-bold">#</th>
+                            <th class="p-3.5 sm:p-4 font-bold">اسم المشارك</th>
+                            <th class="p-3.5 sm:p-4 font-bold text-center">عدد الاستغفار</th>
+                            <th class="p-3.5 sm:p-4 font-bold text-left">الوقت والتاريخ</th>
                         </tr>
                     </thead>
-                    <tbody id="participants-table-body" class="divide-y divide-slate-100 text-sm">
+                    <tbody id="participants-tbody" class="divide-y divide-slate-100 text-sm">
                         <tr>
-                            <td colspan="5" class="text-center py-8 text-slate-400">جاري الاتصال بقاعدة البيانات الجماعية...</td>
+                            <td colspan="4" class="text-center py-8 text-slate-400">جاري تحميل المشاركات...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
-            <!-- حالة الجدول الفارغ -->
-            <div id="empty-state" class="hidden text-center py-10 px-4">
-                <span class="text-4xl block mb-2">🤲</span>
-                <p class="text-slate-600 font-bold">لم يتم تسجيل أي مشاركة بعد</p>
-                <p class="text-xs text-slate-400 mt-1">كن أول المبادرين بالاستغفار على روح الأستاذة هناء طه إسماعيل</p>
-            </div>
         </section>
-
     </main>
 
-    <!-- التذييل (Footer) -->
-    <footer class="bg-emerald-950 text-emerald-200/80 py-6 px-4 text-center text-xs sm:text-sm border-t border-emerald-900 mt-auto">
-        <p class="font-bold text-amber-300/90 mb-1">صدقة جارية عن روح الأستاذة الفاضلة هناء طه إسماعيل - رحمها الله</p>
-        <p class="text-emerald-400/70">اللهم اجعل علمها صدقةً جاريةً لها إلى يوم يبعثون</p>
-    </footer>
-
-    <!-- المنطق البرمجي والربط السحابي الجماعي -->
+    <!-- البرمجة المحلية الفائقة السرعة -->
     <script>
-        const GOAL = 1000000;
-        let currentEntries = [];
+        const TARGET_GOAL = 1000000;
+        let participants = JSON.parse(localStorage.getItem('hanaa_istighfar_participants')) || [];
         let tasbihCount = 0;
 
-        // تهيئة الاتصال السحابي بـ Firebase Realtime Database
-        const firebaseConfig = {
-            databaseURL: "https://hanaa-istighfar-default-rtdb.firebaseio.com/"
-        };
-
-        let db = null;
-        let campaignRef = null;
-
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            db = firebase.database();
-            campaignRef = db.ref('hanaa_campaign');
-        } catch (err) {
-            console.error('Firebase initialization error:', err);
-            updateConnectionStatus(false, 'تعذر تهيئة الاتصال السحابي');
+        function initApp() {
+            renderData();
         }
 
-        // تحديث مؤشر حالة الاتصال
-        function updateConnectionStatus(isConnected, customText) {
-            const dot = document.getElementById('status-dot');
-            const text = document.getElementById('status-text');
-            if (isConnected) {
-                dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]';
-                text.textContent = customText || 'متصل بالعداد الجماعي المباشر ✓';
-            } else {
-                dot.className = 'w-2.5 h-2.5 rounded-full bg-red-500';
-                text.textContent = customText || 'انقطع الاتصال بالخادم الجماعي';
-            }
-        }
-
-        // الاستماع للتحديثات الفورية من السحابة
-        if (campaignRef) {
-            campaignRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                const participantsObj = data.participants || {};
-
-                // تحويل السجلات وترتيبها زمنياً (الأقدم للأحدث لحساب التراكمي بدقة)
-                const parsedList = Object.keys(participantsObj).map((key) => ({
-                    id: key,
-                    name: participantsObj[key].name || 'فاعل خير',
-                    count: Number(participantsObj[key].count) || 0,
-                    timeLabel: participantsObj[key].timeLabel || participantsObj[key].date || '',
-                    timestamp: Number(participantsObj[key].timestamp) || 0
-                })).sort((a, b) => a.timestamp - b.timestamp);
-
-                currentEntries = parsedList;
-                updateUI(currentEntries);
-                updateConnectionStatus(true);
-            }, (error) => {
-                console.error('Firebase read error:', error);
-                updateConnectionStatus(false, 'خطأ في قراءة البيانات السحابية');
-            });
-        }
-
-        // تنسيق الأرقام بفواصل الآلاف
-        function formatNumber(num) {
-            return Number(num).toLocaleString('en-US');
-        }
-
-        // إشعار عائم أنيق
         function showToast(message, icon = '✨') {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-
-            toastMsg.textContent = message;
-            toastIcon.textContent = icon;
-
-            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
-            toast.classList.add('opacity-100', 'translate-y-0');
-
-            clearTimeout(window.toastTimer);
-            window.toastTimer = setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+            const msgEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
+            
+            msgEl.textContent = message;
+            iconEl.textContent = icon;
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
             }, 3500);
         }
 
-        // تعيين اسم "فاعل خير"
         function setAnonymousName() {
-            const nameInput = document.getElementById('participant-name');
-            nameInput.value = 'فاعل خير';
-            nameInput.focus();
+            document.getElementById('participant-name').value = 'فاعل خير';
         }
 
-        // أزرار الإضافة السريعة (+100، +300، +500، +1000، +5000)
         function addQuickAmount(amount) {
-            const countInput = document.getElementById('istighfar-count');
-            const currentVal = parseInt(countInput.value, 10) || 0;
-            countInput.value = currentVal + amount;
+            const input = document.getElementById('istighfar-count');
+            const current = parseInt(input.value) || 0;
+            input.value = current + amount;
         }
 
-        // منطق المسبحة الإلكترونية الشخصية
         function incrementTasbih() {
             tasbihCount++;
-            document.getElementById('tasbih-counter').textContent = formatNumber(tasbihCount);
-            if (navigator.vibrate) {
-                navigator.vibrate(25);
-            }
+            document.getElementById('tasbih-counter').textContent = tasbihCount;
         }
 
         function resetTasbih() {
             tasbihCount = 0;
-            document.getElementById('tasbih-counter').textContent = '0';
-            showToast('تم تصفير عداد المسبحة الشخصية', '🔄');
+            document.getElementById('tasbih-counter').textContent = 0;
         }
 
         function transferTasbihToForm() {
             if (tasbihCount <= 0) {
-                showToast('اضغط على زر المسبحة أولاً للبدء بالاستغفار', '📿');
+                showToast('عداد المسبحة فارغ!', '⚠️');
                 return;
             }
-            const countInput = document.getElementById('istighfar-count');
-            const currentVal = parseInt(countInput.value, 10) || 0;
-            countInput.value = currentVal + tasbihCount;
-            
-            showToast(`تم نقل ${formatNumber(tasbihCount)} استغفار إلى خانة الإضافة`, '⬆️');
-            tasbihCount = 0;
-            document.getElementById('tasbih-counter').textContent = '0';
-            document.getElementById('participant-name').focus();
+            document.getElementById('istighfar-count').value = tasbihCount;
+            showToast(`تم نقل ${tasbihCount} استغفارة`, '⬇️');
+            window.scrollTo({ top: 400, behavior: 'smooth' });
         }
 
-        // إرسال المشاركة الجديدة إلى قاعدة البيانات الجماعية
         document.getElementById('istighfar-form').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            if (!campaignRef) {
-                showToast('لا يوجد اتصال بقاعدة البيانات حالياً', '⚠️');
+            
+            let nameInput = document.getElementById('participant-name').value.trim() || 'فاعل خير';
+            const countInput = parseInt(document.getElementById('istighfar-count').value);
+            
+            if (isNaN(countInput) || countInput <= 0) {
+                showToast('يرجى إدخال عدد صحيح', '⚠️');
                 return;
             }
-
-            const nameInput = document.getElementById('participant-name');
-            const countInput = document.getElementById('istighfar-count');
-            const submitBtn = document.getElementById('submit-btn');
-            const submitBtnText = document.getElementById('submit-btn-text');
-
-            let name = nameInput.value.trim();
-            if (!name) {
-                name = 'فاعل خير';
-            }
-
-            const count = parseInt(countInput.value, 10);
-            if (isNaN(count) || count <= 0) {
-                showToast('يرجى إدخال عدد صحيح أكبر من الصفر', '⚠️');
-                countInput.focus();
-                return;
-            }
-
-            const now = new Date();
-            const timeLabel = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' }) + 
-                              ' - ' + now.toLocaleDateString('ar-IQ', { month: 'short', day: 'numeric' });
 
             const newEntry = {
-                name: name,
-                count: count,
-                timeLabel: timeLabel,
-                timestamp: Date.now()
+                id: Date.now().toString(),
+                name: nameInput,
+                count: countInput,
+                date: new Date().toLocaleDateString('ar-IQ', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' })
             };
 
-            submitBtn.disabled = true;
-            submitBtnText.textContent = 'جاري التسجيل...';
+            participants.unshift(newEntry);
+            saveAndRender();
 
-            campaignRef.child('participants').push(newEntry)
-                .then(() => {
-                    nameInput.value = '';
-                    countInput.value = '';
-
-                    const predictedTotal = currentEntries.reduce((sum, item) => sum + item.count, 0);
-                    if (predictedTotal >= GOAL) {
-                        showToast('ما شاء الله! اكتمل المليون استغفار، شكراً لكم وأجركم الله!', '🎉');
-                        document.getElementById('completion-banner').scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        showToast(`تقبل الله منك يا ${name} (${formatNumber(count)} استغفار)`, '🤲');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Firebase push error:', error);
-                    showToast('حدث خطأ أثناء الإرسال، تأكد من اتصال الإنترنت وحاول مجدداً', '❌');
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtnText.textContent = 'إضافة للحملة الجماعية';
-                });
+            document.getElementById('istighfar-form').reset();
+            showToast(`جزاك الله خيراً ${nameInput}، تم تسجيل الاستغفار بنجاح`, '🤲');
         });
 
-        // تحديث الواجهة والإحصائيات والجدول
-        function updateUI(entriesList) {
-            let runningTotal = 0;
-            const computedEntries = entriesList.map((item) => {
-                runningTotal += item.count;
-                return {
-                    ...item,
-                    remainingSnapshot: Math.max(0, GOAL - runningTotal)
-                };
-            });
+        function saveAndRender() {
+            localStorage.setItem('hanaa_istighfar_participants', JSON.stringify(participants));
+            renderData();
+        }
 
-            const totalCompleted = runningTotal;
-            const remaining = Math.max(0, GOAL - totalCompleted);
-            const percentage = Math.min(100, (totalCompleted / GOAL) * 100);
+        function renderData() {
+            const totalCompleted = participants.reduce((sum, p) => sum + p.count, 0);
+            const remaining = Math.max(0, TARGET_GOAL - totalCompleted);
+            const percentage = Math.min(100, ((totalCompleted / TARGET_GOAL) * 100)).toFixed(1);
 
-            // تحديث الإحصائيات
-            document.getElementById('stat-completed').textContent = formatNumber(totalCompleted);
-            document.getElementById('stat-remaining').textContent = formatNumber(remaining);
+            document.getElementById('stat-completed').textContent = totalCompleted.toLocaleString();
+            document.getElementById('stat-remaining').textContent = remaining.toLocaleString();
+            document.getElementById('progress-percentage').textContent = percentage + '%';
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('participants-badge').textContent = participants.length;
 
-            // تحديث شريط التقدم
-            const formattedPercent = percentage % 1 === 0 ? percentage.toFixed(0) : percentage.toFixed(2);
-            document.getElementById('progress-percentage').textContent = `${formattedPercent}%`;
-            document.getElementById('progress-bar').style.width = `${percentage}%`;
-
-            // إظهار بطاقة الإتمام عند وصول المتبقي إلى 0
             const completionBanner = document.getElementById('completion-banner');
-            const remainingSub = document.getElementById('stat-remaining-sub');
-
-            if (remaining === 0 && totalCompleted >= GOAL) {
+            if (remaining === 0) {
                 completionBanner.classList.remove('hidden');
-                remainingSub.textContent = 'تم الإتمام بحمد الله (0)';
             } else {
                 completionBanner.classList.add('hidden');
-                remainingSub.textContent = 'حتى نصل إلى 0 بإذن الله';
             }
 
-            // تحديث شارة عدد المشاركين والجدول (الأحدث في الأعلى)
-            document.getElementById('participants-badge').textContent = formatNumber(computedEntries.length);
-
-            const tbody = document.getElementById('participants-table-body');
-            const emptyState = document.getElementById('empty-state');
-            tbody.innerHTML = '';
-
-            if (computedEntries.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                const reversed = [...computedEntries].reverse();
-
-                reversed.forEach((entry, index) => {
-                    const rowNumber = reversed.length - index;
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-emerald-50/50 transition';
-
-                    tr.innerHTML = `
-                        <td class="py-3.5 px-4 font-mono text-slate-400 text-xs">${rowNumber}</td>
-                        <td class="py-3.5 px-4 font-bold text-slate-800">${escapeHTML(entry.name)}</td>
-                        <td class="py-3.5 px-4 font-mono font-bold text-emerald-700">+${formatNumber(entry.count)}</td>
-                        <td class="py-3.5 px-4 font-mono font-semibold text-amber-700">${formatNumber(entry.remainingSnapshot)}</td>
-                        <td class="py-3.5 px-4 text-xs text-slate-500">${escapeHTML(entry.timeLabel)}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+            const tbody = document.getElementById('participants-tbody');
+            if (participants.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400">لم يتم تسجيل أي مشاركة بعد. كن أول المشاركين!</td></tr>`;
+                return;
             }
+
+            tbody.innerHTML = participants.map((p, index) => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3.5 sm:p-4 font-mono text-slate-400 font-bold">${index + 1}</td>
+                    <td class="p-3.5 sm:p-4 font-bold text-emerald-950">${escapeHtml(p.name)}</td>
+                    <td class="p-3.5 sm:p-4 font-mono font-extrabold text-emerald-800 text-center">${p.count.toLocaleString()}</td>
+                    <td class="p-3.5 sm:p-4 text-xs text-slate-500 font-mono text-left">${p.date}</td>
+                </tr>
+            `).join('');
         }
 
-        // حماية النصوص من XSS
-        function escapeHTML(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
+        function escapeHtml(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
 
-        // توليد ملخص الحملة للمشاركة والنسخ
-        function generateShareText() {
-            const totalCompleted = currentEntries.reduce((sum, item) => sum + item.count, 0);
-            const remaining = Math.max(0, GOAL - totalCompleted);
-
-            let text = `🌿 *حملة مليون استغفار* 🌿\n`;
-            text += `صدقة جارية على روح المرحومة الأستاذة الفاضلة *هناء طه إسماعيل* (مدرسة مادة الحاسوب)\n`;
-            text += `رحمها الله وأسكنها فسيح جناته وجعل علمها نوراً في قبرها.\n\n`;
-            text += `📊 *إحصائية الحملة الجماعية:*\n`;
-            text += `✅ ما تم إنجازه: *${formatNumber(totalCompleted)}*\n`;
-            text += `⏳ المتبقي لإتمام المليون: *${formatNumber(remaining)}*\n\n`;
-
-            if (remaining === 0) {
-                text += `🎉 *شكراً لكم وأجركم الله، لقد تم إتمام المليون استغفار بحمد الله وتوفيقه على روح المرحومة الأستاذة هناء طه إسماعيل، تقبل الله طاعتكم وجعلها في ميزان حسناتكم وحسناتها.*\n`;
-            } else {
-                if (currentEntries.length > 0) {
-                    text += `📝 *أحدث المشاركات:*\n`;
-                    [...currentEntries].reverse().slice(0, 8).forEach(item => {
-                        text += `• ${item.name}: (${formatNumber(item.count)})\n`;
-                    });
-                    text += `\n`;
-                }
-                text += `شاركوا معنا بالاستغفار ولو بالقليل، الدال على الخير كفاعله 🤍`;
-            }
-
-            if (window.location.href && window.location.href.startsWith('http')) {
-                text += `\n🔗 رابط الحملة المباشر:\n${window.location.href}`;
-            }
-
-            return text;
-        }
-
-        // نسخ ملخص الحملة للحافظة
         function copyReportToClipboard() {
-            const text = generateShareText();
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
+            const totalCompleted = participants.reduce((sum, p) => sum + p.count, 0);
+            const remaining = Math.max(0, TARGET_GOAL - totalCompleted);
+            
+            let text = `🌿 حملة مليون استغفار لروح الأستاذة هناء طه إسماعيل 🌿\n\n`;
+            text += `📊 الإحصائيات:\n`;
+            text += `• الإنجاز الكلي: ${totalCompleted.toLocaleString()} استغفار\n`;
+            text += `• المتبقي: ${remaining.toLocaleString()} استغفار\n\n`;
+            text += `✨ تقبل الله أعمالكم وأجركم على الله.`;
 
-            try {
-                document.execCommand('copy');
-                showToast('تم نسخ ملخص الحملة! يمكنك لصقه ومشاركته الآن', '📋');
-            } catch (err) {
-                showToast('تعذر النسخ التلقائي، يرجى المحاولة مرة أخرى', '⚠️');
-            }
-
-            document.body.removeChild(textarea);
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم نسخ ملخص الحملة بنجاح!', '📋');
+            });
         }
 
-        // مشاركة الحملة
-        function shareCampaign() {
-            const text = generateShareText();
-            if (navigator.share) {
-                navigator.share({
-                    title: 'حملة مليون استغفار - الأستاذة هناء طه إسماعيل',
-                    text: text
-                }).catch(() => {
-                    copyReportToClipboard();
-                });
-            } else {
-                copyReportToClipboard();
-            }
-        }
+        initApp();
     </script>
 </body>
 </html>
